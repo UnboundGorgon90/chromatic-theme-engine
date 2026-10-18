@@ -335,20 +335,26 @@ button { cursor: pointer; }
   transition: background .3s, color .3s;
 }
 
-.preview-canvas::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -25px;
-  background-image: var(--wallpaper);
-  background-size: cover;
-  background-position: center;
-  filter: blur(var(--bg-blur)) saturate(var(--saturation, 100%)) brightness(var(--brightness, 100%)) contrast(var(--contrast, 100%));
-  opacity: var(--overlay-opacity);
-  transition: opacity .2s, filter .2s;
-}
 
-.preview-inner { position: relative; }
+.preview-canvas::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -25px;
+    background-image: var(--wallpaper);
+    background-size: cover;
+    background-position: center;
+    filter: blur(var(--bg-blur)) saturate(var(--saturation, 100%)) brightness(var(--brightness, 100%)) contrast(var(--contrast, 100%));
+    opacity: var(--overlay-opacity);
+    pointer-events: none;
+    transition: opacity .2s, filter .2s;
+  }
+  
+  .preview-inner {
+    position: relative;
+    z-index: 1;
+  }
+  
 
 .demo-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 27px; }
 
