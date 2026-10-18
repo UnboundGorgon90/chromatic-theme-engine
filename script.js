@@ -203,37 +203,31 @@ function renderPalette() {
     extractedColors.length + " colors extracted. Click one to use it.";
 }
 
+
 function applyTheme() {
-  const mood = moods[currentMood];
-  const accent = selectedColor || mood.accent;
-
-  setVariable("--demo-bg", mood.background);
-  setVariable("--demo-card", mood.card);
-  setVariable("--demo-text", mood.text);
-  setVariable("--demo-muted", mood.muted);
-  setVariable("--demo-accent", accent);
-
-  // Make the selected accent affect the full interface.
-  setVariable("--accent", accent);
-
-  if (currentMood === "glass") {
-    previewCanvas.style.backdropFilter = "blur(12px)";
-  } else {
-    previewCanvas.style.backdropFilter = "none";
+    const mood = moods[currentMood];
+    const accent = selectedColor || mood.accent;
+  
+    setVariable("--demo-bg", mood.background);
+    setVariable("--demo-card", mood.card);
+    setVariable("--demo-text", mood.text);
+    setVariable("--demo-muted", mood.muted);
+    setVariable("--demo-accent", accent);
+    setVariable("--accent", accent);
+  
+    if (currentMood === "glass") {
+      previewCanvas.style.backdropFilter = "blur(12px)";
+    } else {
+      previewCanvas.style.backdropFilter = "none";
+    }
+  
+    document.querySelectorAll(".mood").forEach(button => {
+      const active = button.dataset.mood === currentMood;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
   }
-
-  document.querySelectorAll(".mood").forEach(button => {
-    const active = button.dataset.mood === currentMood;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
-
-  updateSlider("saturation", sliderDefaults.saturation);
-  updateSlider("brightness", sliderDefaults.brightness);
-  updateSlider("contrast", sliderDefaults.contrast);
-  updateSlider("blur", mood.blur);
-  updateSlider("overlay", mood.overlay);
-}
+  
 
 function updateSlider(name, value) {
   const input = document.getElementById(name);
@@ -366,14 +360,19 @@ uploadZone.addEventListener("drop", event => {
 });
 
 moodButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    currentMood = button.dataset.mood;
-    selectedColor = extractedColors[0] || "";
-    applyTheme();
-    renderPalette();
+    button.addEventListener("click", () => {
+      currentMood = button.dataset.mood;
+  
+      // Apply the selected mood's default background effects.
+      updateSlider("blur", moods[currentMood].blur);
+      updateSlider("overlay", moods[currentMood].overlay);
+  
+      // Keep the user's selected palette color and other adjustments.
+      applyTheme();
+      renderPalette();
+    });
   });
-});
-
+  
 ["saturation", "brightness", "contrast", "blur", "overlay"]
   .forEach(name => {
     document.getElementById(name).addEventListener("input", event => {
