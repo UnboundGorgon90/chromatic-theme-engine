@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="description" content="Turn your favorite wallpapers into beautiful, customizable website themes.">
+  <title>Chromatic — Your colors, your canvas</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Chromatic home">
+      <span class="brand-mark">C</span>
+      <span>chromatic<span class="brand-dot">.</span></span>
+    </a>
+    <span class="topbar-note">YOUR PERSONAL THEME STUDIO</span>
+    <span class="status"><span class="status-dot"></span> Studio ready</span>
+  </header>
+
+  <main class="workspace">
+    <section class="intro">
+      <span class="eyebrow">COLOR, REIMAGINED</span>
+      <h1>Your wallpaper.<br><span>Your world of color.</span></h1>
+      <p>Turn any image into a beautiful, personalized interface. Upload, explore, and make it yours.</p>
+    </section>
+
+    <section class="studio">
+      <aside class="controls">
+        <div class="section-heading">
+          <span class="step">01</span>
+          <div>
+            <h2>Choose your image</h2>
+            <p>Start with something that inspires you.</p>
+          </div>
+        </div>
+
+        <label class="upload-zone" for="image-upload" id="upload-zone">
+          <img id="image-preview" alt="Your uploaded wallpaper preview" hidden>
+          <span class="upload-icon" id="upload-icon">↑</span>
+          <strong id="upload-title">Drop your wallpaper here</strong>
+          <span id="upload-subtitle">or click to browse your files</span>
+          <span class="file-hint">JPG, PNG or WEBP</span>
+          <input type="file" id="image-upload" accept="image/jpeg,image/png,image/webp">
+        </label>
+
+        <div class="section-heading palette-heading">
+          <span class="step">02</span>
+          <div>
+            <h2>Your color palette</h2>
+            <p id="palette-description">Upload an image to discover its colors.</p>
+          </div>
+        </div>
+
+        <div class="palette" id="palette">
+          <div class="empty-palette">Your colors will appear here.</div>
+        </div>
+
+        <div class="section-heading mood-heading">
+          <span class="step">03</span>
+          <div>
+            <h2>Choose a mood</h2>
+            <p>Find the feeling you're after.</p>
+          </div>
+        </div>
+
+        <div class="mood-grid" id="mood-grid">
+          <button class="mood active" data-mood="minimal">Minimal</button>
+          <button class="mood" data-mood="vibrant">Vibrant</button>
+          <button class="mood" data-mood="warm">Warm</button>
+          <button class="mood" data-mood="cool">Cool</button>
+          <button class="mood" data-mood="glass">Glass</button>
+        </div>
+
+        <div class="section-heading adjustment-heading">
+          <span class="step">04</span>
+          <div>
+            <h2>Fine-tune</h2>
+            <p>Adjust your theme in real time.</p>
+          </div>
+        </div>
+
+        <div class="slider-control">
+          <label for="saturation">Saturation <output id="saturation-value">100%</output></label>
+          <input type="range" id="saturation" min="0" max="200" value="100">
+        </div>
+        <div class="slider-control">
+          <label for="brightness">Brightness <output id="brightness-value">100%</output></label>
+          <input type="range" id="brightness" min="50" max="150" value="100">
+        </div>
+        <div class="slider-control">
+          <label for="contrast">Contrast <output id="contrast-value">100%</output></label>
+          <input type="range" id="contrast" min="50" max="150" value="100">
+        </div>
+        <div class="slider-control">
+          <label for="blur">Background blur <output id="blur-value">8px</output></label>
+          <input type="range" id="blur" min="0" max="24" value="8">
+        </div>
+        <div class="slider-control">
+          <label for="overlay">Overlay opacity <output id="overlay-value">45%</output></label>
+          <input type="range" id="overlay" min="0" max="90" value="45">
+        </div>
+
+        <button class="reset-button" id="reset-button">Reset adjustments</button>
+      </aside>
+
+      <section class="preview-panel">
+        <div class="preview-heading">
+          <div>
+            <span class="eyebrow">LIVE PREVIEW</span>
+            <h2>Your theme in action</h2>
+          </div>
+          <span class="preview-badge">● Live</span>
+        </div>
+
+        <div class="preview-canvas" id="preview-canvas">
+          <div class="preview-inner">
+            <nav class="demo-nav">
+              <span class="demo-brand"><span class="demo-logo">✳</span> Forma</span>
+              <div class="demo-links"><span>Discover</span><span>Collections</span></div>
+              <button class="demo-button secondary">Explore ↗</button>
+            </nav>
+
+            <section class="hero-card">
+              <span class="demo-eyebrow">A LITTLE MORE YOU</span>
+              <h3>Design a life<br>in full color.</h3>
+              <p>Beautiful things begin with a little inspiration. Find your palette, follow your feeling, and make something yours.</p>
+              <button class="demo-button primary">Explore the collection ↗</button>
+              <div class="hero-orb"></div>
+            </section>
+
+            <div class="demo-section-heading">
+              <div><span class="demo-eyebrow">MADE FOR YOUR MOOD</span><h3>Curated for you</h3></div>
+              <span class="demo-muted">View all ↗</span>
+            </div>
+
+            <div class="demo-cards">
+              <article class="demo-card">
+                <div class="card-art art-one"><span>01</span></div>
+                <div class="card-copy"><span class="demo-muted">COLLECTION 01</span><h4>Quiet moments</h4><p>Find your stillness.</p></div>
+              </article>
+              <article class="demo-card">
+                <div class="card-art art-two"><span>02</span></div>
+                <div class="card-copy"><span class="demo-muted">COLLECTION 02</span><h4>Golden hour</h4><p>Chase the light.</p></div>
+              </article>
+              <article class="demo-card">
+                <div class="card-art art-three"><span>03</span></div>
+                <div class="card-copy"><span class="demo-muted">COLLECTION 03</span><h4>New horizons</h4><p>Make room to grow.</p></div>
+              </article>
+            </div>
+
+            <div class="demo-form">
+              <div><span class="demo-eyebrow">STAY INSPIRED</span><h3>A little color in your inbox.</h3></div>
+              <form id="demo-form">
+                <label class="visually-hidden" for="email-input">Email address</label>
+                <input id="email-input" type="email" placeholder="you@example.com" required>
+                <button class="demo-button primary" type="submit">Join us ↗</button>
+              </form>
+            </div>
+            <p class="demo-footer" id="demo-message">A small space for big ideas. Made with intention.</p>
+          </div>
+        </div>
+
+        <div class="preview-footer">
+          <span><span class="status-dot"></span> Changes apply instantly</span>
+          <button id="export-button" class="export-button">Export theme ↗</button>
+        </div>
+      </section>
+    </section>
+    <footer class="page-footer">CHROMATIC STUDIO <span>·</span> FIND YOUR COLOR STORY</footer>
+  </main>
+</body>
+</html>
