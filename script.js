@@ -95,65 +95,112 @@ function rgbToHex(r, g, b) {
     .join("");
 }
 
+
 function getPalette(image) {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d", {
-    willReadFrequently: true
-  });
-
-  const size = 100;
-  canvas.width = size;
-  canvas.height = size;
-
-  context.drawImage(image, 0, 0, size, size);
-
-  const pixels = context.getImageData(0, 0, size, size).data;
-  const buckets = new Map();
-
-  for (let i = 0; i < pixels.length; i += 16) {
-    const r = pixels[i];
-    const g = pixels[i + 1];
-    const b = pixels[i + 2];
-    const alpha = pixels[i + 3];
-
-    if (alpha < 200) continue;
-
-    // Group similar colors into the same bucket.
-    const key = [
-      Math.round(r / 32),
-      Math.round(g / 32),
-      Math.round(b / 32)
-    ].join(",");
-
-    const bucket = buckets.get(key) || {
-      r: 0, g: 0, b: 0, count: 0
-    };
-
-    bucket.r += r;
-    bucket.g += g;
-    bucket.b += b;
-    bucket.count++;
-
-    buckets.set(key, bucket);
-  }
-
-  return [...buckets.values()]
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 20)
-    .map(bucket => ({
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d", {
+      willReadFrequently: true
+    });
+  
+    const size = 100;
+    canvas.width = size;
+    canvas.height = size;
+  
+    context.drawImage(image, 0, 0, size, size);
+  
+    const pixels = context.getImageData(
+      0, 0, size, size
+    ).data;
+  
+    const buckets = new Map();
+  
+    // Group similar pixels into color families.
+    for (let i = 0; i < pixels.length; i += 16) {
+      const r = pixels[i];
+      const g = pixels[i + 1];
+      const b = pixels[i + 2];
+      const alpha = pixels[i + 3];
+  
+      if (alpha < 200) continue;
+  
+      const key = [
+        Math.floor(r / 32),
+        Math.floor(g / 32),
+        Math.floor(b / 32)
+      ].join(",");
+  
+      if (!buckets.has(key)) {
+        buckets.set(key, {
+          r: 0,
+          g: 0,
+          b: 0,
+          count: 0
+        });
+      }
+  
+      const bucket = buckets.get(key);
+      bucket.r += r;
+      bucket.g += g;
+      bucket.b += b;
+      bucket.count++;
+    }
+  
+    // Calculate the average color of each family.
+    const candidates = [...buckets.values()].map(bucket => ({
       hex: rgbToHex(
         bucket.r / bucket.count,
         bucket.g / bucket.count,
         bucket.b / bucket.count
       ),
       count: bucket.count
-    }))
-    .filter((color, index, all) =>
-      all.findIndex(item => item.hex === color.hex) === index
-    )
-    .slice(0, 5)
-    .map(color => color.hex);
-}
+    }));
+  
+    if (!candidates.length) return [];
+  
+    candidates.sort((a, b) => b.count - a.count);
+  
+    // Start with the most frequently sampled color.
+    const selected = [candidates[0]];
+    const remaining = candidates.slice(1);
+  
+    // Prefer colors that are both common and visually distinct.
+    while (selected.length < 5 && remaining.length) {
+      let bestIndex = 0;
+      let bestScore = -Infinity;
+  
+      remaining.forEach((candidate, index) => {
+        const color = hexToRgb(candidate.hex);
+  
+        const minDistance = Math.min(
+          ...selected.map(item => {
+            const chosen = hexToRgb(item.hex);
+            return Math.sqrt(
+              (color.r - chosen.r) ** 2 +
+              (color.g - chosen.g) ** 2 +
+              (color.b - chosen.b) ** 2
+            );
+          })
+        );
+  
+        const distanceScore = minDistance / Math.sqrt(3 * 255 ** 2);
+        const frequencyScore = candidate.count / candidates[0].count;
+  
+        const score =
+          0.55 * frequencyScore +
+          0.45 * distanceScore;
+  
+        if (score > bestScore) {
+          bestScore = score;
+          bestIndex = index;
+        }
+      });
+  
+      selected.push(remaining.splice(bestIndex, 1)[0]);
+    }
+  
+    return selected.map(color => color.hex);
+  }
+  
 
 function renderPalette() {
   palette.replaceChildren();
