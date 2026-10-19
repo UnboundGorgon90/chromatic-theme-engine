@@ -251,9 +251,31 @@ function renderPalette() {
 }
 
 
+function getContrastText(hex) {
+    const { r, g, b } = hexToRgb(hex);
+  
+    function linearize(value) {
+      value /= 255;
+      return value <= 0.04045
+        ? value / 12.92
+        : ((value + 0.055) / 1.055) ** 2.4;
+    }
+  
+    const luminance =
+      0.2126 * linearize(r) +
+      0.7152 * linearize(g) +
+      0.0722 * linearize(b);
+  
+    const whiteContrast = 1.05 / (luminance + 0.05);
+    const blackContrast = (luminance + 0.05) / 0.05;
+  
+    return whiteContrast > blackContrast ? "#ffffff" : "#111111";
+  }
+  
 function applyTheme() {
     const mood = moods[currentMood];
     const accent = selectedColor || mood.accent;
+    setVariable("--demo-accent-text", getContrastText(accent));
   
     setVariable("--demo-bg", mood.background);
     setVariable("--demo-card", mood.card);
