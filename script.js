@@ -473,3 +473,21 @@ exportButton.addEventListener("click", () => {
 });
 
 resetAdjustments();
+
+
+const YOUTUBE_LINK =
+  "https://youtu.be/QDia3e12czc?si=fsTBgUGFB6X3e-cb";
+
+previewCanvas.addEventListener("click", event => {
+  const clickedElement = event.target.closest(
+    ".demo-brand, .demo-links span, " +
+    ".demo-nav .demo-button, .hero-card .demo-button, " +
+    ".demo-section-heading .demo-muted, " +
+    ".demo-card, .demo-form button"
+  );
+
+  if (!clickedElement) return;
+
+  window.open(YOUTUBE_LINK, "_blank", "noopener,noreferrer");
+});
+
